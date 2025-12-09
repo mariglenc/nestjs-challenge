@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: nestjs_challenge_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: nestjs-challenge
+
+  authentication:
+    build:
+      context: ./apps/authentication
+      dockerfile: Dockerfile
+    container_name: nestjs_challenge_authentication
+    environment:
+      AUTH_SERVICE_HOST: "0.0.0.0"
+      AUTH_SERVICE_PORT: 4001
+      MONGO_URI: "mongodb://mongo:27017/nestjs-challenge"  # Keep 27017 here (internal)
+    depends_on:
+      - mongo
+    ports:
+      - "4001:4001"
+
+  gateway:
+    build:
+      context: ./apps/gateway
+      dockerfile: Dockerfile
+    container_name: nestjs_challenge_gateway
+    environment:
+      GATEWAY_PORT: 3000
+      AUTH_SERVICE_HOST: "authentication"
+      AUTH_SERVICE_PORT: 4001
+    depends_on:
+      - authentication
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongo_data:

@@ -1,0 +1,12 @@
+{
+  "name": "nestjs-challenge",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "start:dev:authentication": "npm --workspace=@challenge/authentication run start:dev",
+    "start:dev:gateway": "npm --workspace=@challenge/gateway run start:dev"
+  }
+}
