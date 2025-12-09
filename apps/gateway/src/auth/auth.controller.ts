@@ -1,7 +1,10 @@
 // apps\gateway\src\auth\auth.controller.ts
 import { Controller, Post, Body, Inject, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+
 import { Patterns } from '../common/messaging/patterns';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -18,5 +21,10 @@ export class AuthController {
   @Get('users')
   async findAll(): Promise<any> {
     return this.client.send(Patterns.USERS_FIND_ALL, {}).toPromise();
+  }
+
+  @Post('login')
+  async login(@Body() dto: LoginUserDto): Promise<any> {
+    return this.client.send(Patterns.USERS_LOGIN, dto).toPromise();
   }
 }
