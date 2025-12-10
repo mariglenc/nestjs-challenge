@@ -1,5 +1,4 @@
-// apps/gateway/src/auth/auth.controller.ts
-import { Controller, Post, Body, Inject, Get, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Inject, Get, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -8,6 +7,8 @@ import { LoginUserDto } from './dto/login-user.dto';
 
 import { Patterns } from '../common/messaging/patterns';
 import { ApiTags } from '@nestjs/swagger';
+// import { ApiBearerAuth } from '@nestjs/swagger';
+// import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -19,7 +20,6 @@ export class AuthController {
     try {
       return await firstValueFrom(this.client.send(Patterns.USERS_REGISTER, dto));
     } catch (err: any) {
-      // convert microservice error to proper HTTP response
       const status =
         err?.status && typeof err.status === 'number'
           ? err.status
@@ -28,6 +28,8 @@ export class AuthController {
     }
   }
 
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
   @Get('users')
   async findAll(): Promise<any> {
     try {

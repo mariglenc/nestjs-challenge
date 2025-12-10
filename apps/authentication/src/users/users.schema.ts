@@ -1,14 +1,13 @@
-// apps\authentication\src\users\users.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true })
-  email!: string;  // Add !
+  email!: string; 
 
   @Prop({ required: true })
-  password!: string;  // Add !
+  password!: string;
 
   @Prop()
   name?: string;

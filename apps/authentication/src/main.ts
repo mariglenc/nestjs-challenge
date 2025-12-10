@@ -1,4 +1,3 @@
-// apps\authentication\src\main.ts
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 

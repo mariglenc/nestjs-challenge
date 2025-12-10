@@ -1,4 +1,3 @@
-// apps\authentication\src\users\users.service.ts
 import { Injectable, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RpcException } from '@nestjs/microservices';

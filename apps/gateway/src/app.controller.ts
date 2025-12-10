@@ -1,4 +1,3 @@
-// apps/gateway/src/app.controller.ts
 import { Controller, Get } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 

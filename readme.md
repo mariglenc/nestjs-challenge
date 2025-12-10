@@ -60,22 +60,13 @@ cd nestjs-challenge
 ```
 ## 🏃 Running the Application
 
-### Option 1: Using Docker (Recommended)
+### Using Docker (or manually each app and mongo)
 
 ```bash
-# Build and start all services
-docker-compose up --build
-
-# Or run in detached mode
 docker-compose up -d --build
 
-# View logs
 docker-compose logs -f
 
-# Stop services
-docker-compose down
-
-# Stop and remove volumes
 docker-compose down -v
 ```
 

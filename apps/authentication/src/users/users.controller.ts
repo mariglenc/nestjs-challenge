@@ -1,4 +1,3 @@
-// apps\authentication\src\users\users.controller.ts
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
