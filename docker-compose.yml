@@ -10,6 +10,8 @@ services:
       - mongo_data:/data/db
     environment:
       MONGO_INITDB_DATABASE: nestjs-challenge
+      # MONGO_INITDB_ROOT_USERNAME: admin   # your desired username
+      # MONGO_INITDB_ROOT_PASSWORD: secret  # your desired password
 
   authentication:
     build:
@@ -20,6 +22,7 @@ services:
       AUTH_SERVICE_HOST: "0.0.0.0"
       AUTH_SERVICE_PORT: 4001
       MONGO_URI: "mongodb://mongo:27017/nestjs-challenge"  # Keep 27017 here (internal)
+      # MONGO_URI: "mongodb://admin:secret@mongo:27017/nestjs-challenge?authSource=admin"
     depends_on:
       - mongo
     ports:
