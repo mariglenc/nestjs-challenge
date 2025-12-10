@@ -13,6 +13,66 @@
   ],
   "item": [
     {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Check if the API root is accessible"
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Health check endpoint for monitoring service status"
+          },
+          "response": []
+        },
+        {
+          "name": "Swagger Documentation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/docs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "docs"
+              ]
+            },
+            "description": "Access Swagger UI documentation"
+          },
+          "response": []
+        }
+      ],
+      "description": "Health check, root, and documentation endpoints"
+    },
+    {
       "name": "Authentication",
       "item": [
         {
@@ -31,8 +91,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Register a new user with email, password, and optional name"
           },
@@ -54,8 +119,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Register a new user without optional name field"
           },
@@ -77,29 +147,92 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Attempt to register with an existing email - should return 409 Conflict"
           },
           "response": []
         },
         {
-          "name": "Get All Users",
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email and password to receive JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "description": "JWT token from login response"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "users"
+              ]
+            },
+            "description": "Retrieve list of all registered users (requires JWT authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (No Auth - Should Fail)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/users",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "users"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "users"
+              ]
             },
-            "description": "Retrieve list of all registered users (without passwords)"
+            "description": "Attempt to get users without authentication - should return 401 Unauthorized"
           },
           "response": []
         }
       ],
-      "description": "Endpoints for user registration and management"
+      "description": "Endpoints for user registration, login, and management"
     },
     {
       "name": "Validation Tests",
@@ -120,8 +253,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Test email validation - should return 400 Bad Request"
           },
@@ -143,8 +281,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Test password length validation (min 6 characters) - should return 400 Bad Request"
           },
@@ -166,35 +309,48 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Test missing required fields (email and password) - should return 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Wrong Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Test login with incorrect password - should return 401 Unauthorized"
           },
           "response": []
         }
       ],
       "description": "Test cases for validation rules"
-    },
-    {
-      "name": "Health Check",
-      "item": [
-        {
-          "name": "Swagger Documentation",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/docs",
-              "host": ["{{baseUrl}}"],
-              "path": ["docs"]
-            },
-            "description": "Access Swagger UI documentation"
-          },
-          "response": []
-        }
-      ],
-      "description": "Health and documentation endpoints"
     }
   ]
 }
