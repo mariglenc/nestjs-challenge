@@ -1,21 +1,18 @@
-//apps\gateway\src\app.module.ts
 import { Module } from '@nestjs/common';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { APP_GUARD } from '@nestjs/core';
 
 import { HealthModule } from './health/health.module';
-
 import { AuthController } from './auth/auth.controller';
-import { AppController } from './app.controller'; // <- import
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      ttl: 60, // time window in seconds
-      limit: 5, // max 5 requests per TTL per IP
-      ignoreUserAgents: [], // optional
-      errorMessage: 'Too many requests', // optional
-    } as any ),
+      ttl: 60,
+      limit: 60,
+    }),
     HealthModule,
     ClientsModule.register([
       {
@@ -29,5 +26,11 @@ import { AppController } from './app.controller'; // <- import
     ]),
   ],
   controllers: [AuthController, AppController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,5 +1,6 @@
 // apps/gateway/src/app.controller.ts
 import { Controller, Get } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 
 function formatUptime(seconds: number): string {
   const hrs = Math.floor(seconds / 3600);
@@ -13,6 +14,7 @@ function formatUptime(seconds: number): string {
 @Controller()
 export class AppController {
   @Get()
+  @Throttle(2, 10)
   root() {
     return {
       uptime: formatUptime(process.uptime()),
