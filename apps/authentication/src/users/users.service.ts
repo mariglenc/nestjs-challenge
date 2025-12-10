@@ -1,6 +1,7 @@
 // apps\authentication\src\users\users.service.ts
 import { Injectable, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { RpcException } from '@nestjs/microservices';
 
 import { UsersRepository } from './users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,7 +13,7 @@ export class UsersService {
 
   async register(dto: CreateUserDto) {
     const exists = await this.usersRepo.findByEmail(dto.email);
-    if (exists) throw new ConflictException('Email already in use');
+    if (exists) throw new RpcException('Email already in use');
 
     const created = await this.usersRepo.create({
       email: dto.email,
@@ -31,10 +32,13 @@ export class UsersService {
 
   async login(dto: LoginUserDto) {
     const user = await this.usersRepo.findByEmail(dto.email);
-    if (!user) throw new Error('Invalid email or password');
+    if (!user) {
+      throw new RpcException('Invalid email');
+    }
 
-    if (user.password !== dto.password)
-      throw new Error('Invalid email or password');
+    if (user.password !== dto.password) {
+      throw new RpcException('Invalid password');
+    }
 
     const payload = {
       sub: user._id,
@@ -48,5 +52,4 @@ export class UsersService {
 
     return { ...rest, token };
   }
-
 }
